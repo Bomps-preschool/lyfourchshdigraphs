@@ -10,16 +10,16 @@
                    maximum-scale=1.0,
                    user-scalable=no">
 
-    <title>SH and CH Digraph Game</title>
+    <title>SH or CH Digraph Game</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<!-- =================================
-     INNOVINE LOGO – 5 SECONDS
-     ================================= -->
+<!-- =========================
+     INNOVINE LOGO
+     ========================= -->
 
 <div id="splash">
     <img src="assets/innovine-logo.png"
@@ -27,9 +27,9 @@
 </div>
 
 
-<!-- =================================
+<!-- =========================
      START SCREEN
-     ================================= -->
+     ========================= -->
 
 <div id="startScreen" class="screen hidden">
 
@@ -39,9 +39,7 @@
 
         <h1>SH or CH?</h1>
 
-        <p>
-            Look at the picture and word.
-        </p>
+        <p>Look at the picture and word.</p>
 
         <p>
             <strong>
@@ -49,7 +47,9 @@
             </strong>
         </p>
 
-        <button id="startBtn" type="button">
+        <button id="startBtn"
+                type="button"
+                onclick="startGame()">
             ▶ Start Game
         </button>
 
@@ -58,9 +58,9 @@
 </div>
 
 
-<!-- =================================
-     GAME
-     ================================= -->
+<!-- =========================
+     GAME SCREEN
+     ========================= -->
 
 <div id="game" class="hidden">
 
@@ -70,7 +70,8 @@
 
         <div class="topRow">
 
-            <button id="hearBtn" type="button">
+            <button id="hearBtn"
+                    type="button">
                 🔊 Hear
             </button>
 
@@ -96,6 +97,8 @@
             </p>
 
 
+            <!-- IMAGE -->
+
             <div class="pictureBox">
 
                 <img id="itemImage"
@@ -104,6 +107,8 @@
 
             </div>
 
+
+            <!-- WORD -->
 
             <div id="wordBox"
                  class="wordBox">
@@ -115,17 +120,19 @@
             </p>
 
 
+            <!-- ANSWERS -->
+
             <div class="answerRow">
 
                 <button class="answerBtn"
-                        data-answer="sh"
-                        type="button">
+                        type="button"
+                        data-answer="sh">
                     sh
                 </button>
 
                 <button class="answerBtn"
-                        data-answer="ch"
-                        type="button">
+                        type="button"
+                        data-answer="ch">
                     ch
                 </button>
 
@@ -134,10 +141,14 @@
         </section>
 
 
+        <!-- FEEDBACK -->
+
         <div id="feedback"
              class="hidden">
         </div>
 
+
+        <!-- CONFETTI -->
 
         <div id="confetti">
         </div>
@@ -147,32 +158,28 @@
 </div>
 
 
-<!-- =================================
+<!-- =========================
      END SCREEN
-     ================================= -->
+     ========================= -->
 
 <div id="endScreen"
      class="screen hidden">
 
     <div class="startCard">
 
-        <div class="miniTitle">
-            🏆
-        </div>
+        <div class="miniTitle">🏆</div>
 
-        <h1>
-            Great Job!
-        </h1>
+        <h1>Great Job!</h1>
 
-        <p id="finalScore">
-        </p>
+        <p id="finalScore"></p>
 
         <p>
             You are a digraph star! 🌟
         </p>
 
         <button id="againBtn"
-                type="button">
+                type="button"
+                onclick="startGame()">
             🔄 Play Again
         </button>
 
@@ -181,9 +188,9 @@
 </div>
 
 
-<!-- =================================
+<!-- =========================
      AUDIO
-     ================================= -->
+     ========================= -->
 
 <audio id="music"
        loop
@@ -213,11 +220,9 @@
 </audio>
 
 
-<!-- =================================
+<!-- =========================
      SPLASH TIMER
-     IMPORTANT:
-     This runs independently of script.js
-     ================================= -->
+     ========================= -->
 
 <script>
 
@@ -246,11 +251,7 @@ window.addEventListener("load", function () {
 </script>
 
 
-<!-- GAME SCRIPTS -->
-
-<script src="speech.js"></script>
 <script src="script.js"></script>
-
 
 </body>
 </html>
