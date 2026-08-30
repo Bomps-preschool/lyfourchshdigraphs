@@ -1,5 +1,5 @@
 /* =========================================
-   VOICE / SPEECH
+   SPEECH / VOICE
    ========================================= */
 
 function speak(text) {
@@ -13,19 +13,18 @@ function speak(text) {
     const utterance =
         new SpeechSynthesisUtterance(text);
 
-    utterance.rate = 0.85;
-
-    utterance.pitch = 1.1;
-
+    utterance.lang = "en-US";
+    utterance.rate = 0.82;
+    utterance.pitch = 1.05;
     utterance.volume = 1;
 
-    window.speechSynthesis.speak(
-        utterance
-    );
+    window.speechSynthesis.speak(utterance);
 }
 
 
-/* Speak the game instruction */
+/* =========================================
+   GAME INSTRUCTION
+   ========================================= */
 
 function speakInstruction() {
 
@@ -36,10 +35,27 @@ function speakInstruction() {
 }
 
 
-/* Speak the completed word */
+/* =========================================
+   SPEAK COMPLETED WORD
+   ========================================= */
 
 function speakWord(word) {
 
-    speak(word);
+    if (!("speechSynthesis" in window)) {
+        return;
+    }
 
+    window.speechSynthesis.cancel();
+
+    const utterance =
+        new SpeechSynthesisUtterance(word);
+
+    utterance.lang = "en-US";
+    utterance.rate = 0.75;
+    utterance.pitch = 1.05;
+    utterance.volume = 1;
+
+    window.speechSynthesis.speak(
+        utterance
+    );
 }
