@@ -1,4 +1,6 @@
-/* Web Speech API */
+/* =========================================
+   VOICE / SPEECH
+   ========================================= */
 
 function speak(text) {
 
@@ -12,19 +14,23 @@ function speak(text) {
         new SpeechSynthesisUtterance(text);
 
     utterance.rate = 0.85;
+
     utterance.pitch = 1.1;
+
     utterance.volume = 1;
 
-    window.speechSynthesis.speak(utterance);
+    window.speechSynthesis.speak(
+        utterance
+    );
 }
 
 
-/* Game instruction */
+/* Speak the game instruction */
 
 function speakInstruction() {
 
     speak(
-        "Tap on the digraph cha or sha to complete the word."
+        "Tap on the correct digraph to complete the word."
     );
 
 }
