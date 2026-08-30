@@ -1,277 +1,600 @@
+/* =========================================
+   SH AND CH DIGRAPH GAME
+   ========================================= */
+
+
 const questions = [
-  { image: "chick.png", word: "_ick", answer: "ch", spoken: "chick" },
-  { image: "shoe.png", word: "_oe", answer: "sh", spoken: "shoe" },
-  { image: "sheep.png", word: "_eep", answer: "sh", spoken: "sheep" },
-  { image: "chair.png", word: "_air", answer: "ch", spoken: "chair" },
-  { image: "shirt.png", word: "_irt", answer: "sh", spoken: "shirt" },
-  { image: "chalk.png", word: "_alk", answer: "ch", spoken: "chalk" },
-  { image: "chain.png", word: "_ain", answer: "ch", spoken: "chain" },
-  { image: "ship.png", word: "_ip", answer: "sh", spoken: "ship" },
-  { image: "shop.png", word: "_op", answer: "sh", spoken: "shop" },
-  { image: "shark.png", word: "_ark", answer: "sh", spoken: "shark" }
+
+    {
+        image: "chick.png",
+        word: "_ick",
+        answer: "ch",
+        spoken: "chick"
+    },
+
+    {
+        image: "shoe.png",
+        word: "_oe",
+        answer: "sh",
+        spoken: "shoe"
+    },
+
+    {
+        image: "sheep.png",
+        word: "_eep",
+        answer: "sh",
+        spoken: "sheep"
+    },
+
+    {
+        image: "chair.png",
+        word: "_air",
+        answer: "ch",
+        spoken: "chair"
+    },
+
+    {
+        image: "shirt.png",
+        word: "_irt",
+        answer: "sh",
+        spoken: "shirt"
+    },
+
+    {
+        image: "chalk.png",
+        word: "_alk",
+        answer: "ch",
+        spoken: "chalk"
+    },
+
+    {
+        image: "chain.png",
+        word: "_ain",
+        answer: "ch",
+        spoken: "chain"
+    },
+
+    {
+        image: "ship.png",
+        word: "_ip",
+        answer: "sh",
+        spoken: "ship"
+    },
+
+    {
+        image: "shop.png",
+        word: "_op",
+        answer: "sh",
+        spoken: "shop"
+    },
+
+    {
+        image: "shark.png",
+        word: "_ark",
+        answer: "sh",
+        spoken: "shark"
+    }
+
 ];
 
+
 let current = 0;
+
 let score = 0;
+
 let locked = false;
 
-const splash = document.getElementById("splash");
-const startScreen = document.getElementById("startScreen");
-const game = document.getElementById("game");
-const endScreen = document.getElementById("endScreen");
-
-const startBtn = document.getElementById("startBtn");
-const againBtn = document.getElementById("againBtn");
-const hearBtn = document.getElementById("hearBtn");
-
-const itemImage = document.getElementById("itemImage");
-const wordBox = document.getElementById("wordBox");
-const instruction = document.getElementById("instruction");
-
-const progress = document.getElementById("progress");
-const scoreBox = document.getElementById("score");
-
-const feedback = document.getElementById("feedback");
-const confetti = document.getElementById("confetti");
-
-const finalScore = document.getElementById("finalScore");
-
-const music = document.getElementById("music");
-const correctSound = document.getElementById("correctSound");
-const wrongSound = document.getElementById("wrongSound");
-
-const answerButtons = document.querySelectorAll(".answerBtn");
 
 
-/* BACKGROUND MUSIC */
+/* =========================================
+   ELEMENTS
+   ========================================= */
+
+
+const splash =
+    document.getElementById("splash");
+
+
+const startScreen =
+    document.getElementById("startScreen");
+
+
+const game =
+    document.getElementById("game");
+
+
+const endScreen =
+    document.getElementById("endScreen");
+
+
+const startBtn =
+    document.getElementById("startBtn");
+
+
+const againBtn =
+    document.getElementById("againBtn");
+
+
+const hearBtn =
+    document.getElementById("hearBtn");
+
+
+const itemImage =
+    document.getElementById("itemImage");
+
+
+const wordBox =
+    document.getElementById("wordBox");
+
+
+const instruction =
+    document.getElementById("instruction");
+
+
+const progress =
+    document.getElementById("progress");
+
+
+const scoreBox =
+    document.getElementById("score");
+
+
+const feedback =
+    document.getElementById("feedback");
+
+
+const confetti =
+    document.getElementById("confetti");
+
+
+const finalScore =
+    document.getElementById("finalScore");
+
+
+const music =
+    document.getElementById("music");
+
+
+const correctSound =
+    document.getElementById("correctSound");
+
+
+const wrongSound =
+    document.getElementById("wrongSound");
+
+
+const answerButtons =
+    document.querySelectorAll(".answerBtn");
+
+
+
+/* =========================================
+   BACKGROUND MUSIC
+   ========================================= */
 
 function playMusic() {
+
     music.volume = 0.15;
 
     music.play().catch(() => {});
+
 }
 
 
-/* SHOW QUESTION */
+
+/* =========================================
+   SHOW QUESTION
+   ========================================= */
 
 function showQuestion() {
 
     locked = false;
 
-    const q = questions[current];
 
-    itemImage.src = "assets/" + q.image;
-    itemImage.alt = q.spoken;
+    const q =
+        questions[current];
+
+
+    /* Picture */
+
+    itemImage.src =
+        "assets/" + q.image;
+
+
+    itemImage.alt =
+        q.spoken;
+
+
 
     /* Written instruction */
-    instruction.textContent =
-        "Tap on the digraph cha or sha to complete the word.";
 
-    /* Show incomplete word */
+    instruction.textContent =
+        "Tap on the correct digraph to complete the word.";
+
+
+
+    /* Incomplete word */
+
     wordBox.innerHTML =
         '<span class="blank">__</span>' +
         q.word.substring(1);
 
+
+
+    /* Progress */
+
     progress.textContent =
-        (current + 1) + " / " + questions.length;
+        (current + 1) +
+        " / " +
+        questions.length;
+
+
+
+    /* Score */
 
     scoreBox.textContent =
         "⭐ " + score;
 
-    answerButtons.forEach(button => {
-        button.classList.remove("correct", "wrong");
-        button.disabled = false;
-    });
+
+
+    /* Reset buttons */
+
+    answerButtons.forEach(
+        function(button) {
+
+            button.classList.remove(
+                "correct",
+                "wrong"
+            );
+
+            button.disabled = false;
+
+        }
+    );
+
+
 
     /* Voice instruction */
-    speak(
-        "Look at the picture. " +
-        "Tap on the digraph cha or sha to complete the word."
-    );
+
+    speakInstruction();
+
 }
 
 
-/* CHECK ANSWER */
+
+/* =========================================
+   CHECK ANSWER
+   ========================================= */
 
 function checkAnswer(button) {
+
 
     if (locked) {
         return;
     }
 
-    const selected = button.dataset.answer;
-    const q = questions[current];
 
-    /* CORRECT ANSWER */
+    const selected =
+        button.dataset.answer;
+
+
+    const q =
+        questions[current];
+
+
+
+    /* =====================================
+       CORRECT ANSWER
+       ===================================== */
 
     if (selected === q.answer) {
 
+
         locked = true;
 
-        button.classList.add("correct");
 
-        answerButtons.forEach(btn => {
-            btn.disabled = true;
-        });
+        button.classList.add(
+            "correct"
+        );
+
+
+        answerButtons.forEach(
+            function(btn) {
+
+                btn.disabled = true;
+
+            }
+        );
+
 
         score++;
+
 
         scoreBox.textContent =
             "⭐ " + score;
 
+
+
+        /* Show correct */
+
         showCorrect();
+
+
 
         /*
          * Speak the completed word.
-         * For sheep, the voice specifically says "Sheep".
+         *
+         * Example:
+         * sheep
+         * chair
+         * shoe
          */
-        if (q.spoken === "sheep") {
 
-            speak(
-                "Correct! Well done! Sheep."
-            );
+        setTimeout(
+            function() {
 
-        } else {
+                speakWord(
+                    q.spoken
+                );
 
-            speak(
-                "Correct! Well done! " +
-                q.spoken + "."
-            );
-        }
+            },
+            350
+        );
+
 
 
         /* Move to next question */
 
-        setTimeout(() => {
+        setTimeout(
+            function() {
 
-            current++;
-
-            if (current >= questions.length) {
-
-                finishGame();
-
-            } else {
-
-                showQuestion();
-
-            }
-
-        }, 1500);
+                current++;
 
 
-    } else {
+                if (
+                    current >=
+                    questions.length
+                ) {
 
-        /* WRONG ANSWER
-           Stay on the same question. */
+                    finishGame();
 
-        button.classList.add("wrong");
+                }
+                else {
+
+                    showQuestion();
+
+                }
+
+            },
+            1700
+        );
+
+
+    }
+
+
+    /* =====================================
+       WRONG ANSWER
+       ===================================== */
+
+    else {
+
+
+        /*
+         * Do NOT lock the game.
+         * Child can try again.
+         */
+
+        button.classList.add(
+            "wrong"
+        );
+
 
         showWrong();
+
 
         speak(
             "Try again. Look carefully."
         );
 
-        setTimeout(() => {
 
-            button.classList.remove("wrong");
+        setTimeout(
+            function() {
 
-        }, 800);
+                button.classList.remove(
+                    "wrong"
+                );
+
+            },
+            800
+        );
+
     }
+
 }
 
 
-/* CORRECT FEEDBACK */
+
+/* =========================================
+   CORRECT FEEDBACK
+   ========================================= */
 
 function showCorrect() {
 
-    feedback.textContent = "✓";
 
-    feedback.style.color = "#43A047";
+    feedback.textContent =
+        "✓";
 
-    feedback.classList.remove("hidden");
 
-    correctSound.currentTime = 0;
+    feedback.style.color =
+        "#43A047";
 
-    correctSound.play().catch(() => {});
+
+    feedback.classList.remove(
+        "hidden"
+    );
+
+
+    correctSound.currentTime =
+        0;
+
+
+    correctSound.play().catch(
+        () => {}
+    );
+
 
     makeConfetti();
 
-    setTimeout(() => {
 
-        feedback.classList.add("hidden");
 
-    }, 1000);
+    setTimeout(
+        function() {
+
+            feedback.classList.add(
+                "hidden"
+            );
+
+        },
+        1000
+    );
+
 }
 
 
-/* WRONG FEEDBACK */
+
+/* =========================================
+   WRONG FEEDBACK
+   ========================================= */
 
 function showWrong() {
 
-    feedback.textContent = "✕";
 
-    feedback.style.color = "#E53935";
+    feedback.textContent =
+        "✕";
 
-    feedback.classList.remove("hidden");
 
-    wrongSound.currentTime = 0;
+    feedback.style.color =
+        "#E53935";
 
-    wrongSound.play().catch(() => {});
 
-    setTimeout(() => {
+    feedback.classList.remove(
+        "hidden"
+    );
 
-        feedback.classList.add("hidden");
 
-    }, 800);
+    wrongSound.currentTime =
+        0;
+
+
+    wrongSound.play().catch(
+        () => {}
+    );
+
+
+
+    setTimeout(
+        function() {
+
+            feedback.classList.add(
+                "hidden"
+            );
+
+        },
+        800
+    );
+
 }
 
 
-/* CONFETTI */
+
+/* =========================================
+   CONFETTI
+   ========================================= */
 
 function makeConfetti() {
 
-    confetti.innerHTML = "";
+
+    confetti.innerHTML =
+        "";
+
 
     const colours = [
+
         "#ff6b6b",
         "#ffd43b",
         "#69db7c",
         "#4dabf7",
         "#cc5de8",
         "#ff922b"
+
     ];
 
-    for (let i = 0; i < 65; i++) {
+
+
+    for (
+        let i = 0;
+        i < 65;
+        i++
+    ) {
+
 
         const piece =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
-        piece.className = "piece";
+
+        piece.className =
+            "piece";
+
 
         piece.style.left =
-            Math.random() * 100 + "vw";
+            Math.random() *
+            100 +
+            "vw";
+
 
         piece.style.backgroundColor =
-            colours[i % colours.length];
+            colours[
+                i % colours.length
+            ];
+
 
         piece.style.animationDelay =
-            Math.random() * 0.25 + "s";
+            Math.random() *
+            0.25 +
+            "s";
 
-        confetti.appendChild(piece);
+
+        confetti.appendChild(
+            piece
+        );
+
     }
 
-    setTimeout(() => {
 
-        confetti.innerHTML = "";
 
-    }, 1400);
+    setTimeout(
+        function() {
+
+            confetti.innerHTML =
+                "";
+
+        },
+        1400
+    );
+
 }
 
 
-/* START GAME */
+
+/* =========================================
+   START GAME
+   ========================================= */
 
 function startGame() {
+
 
     current = 0;
 
@@ -279,40 +602,67 @@ function startGame() {
 
     locked = false;
 
-    startScreen.classList.add("hidden");
 
-    endScreen.classList.add("hidden");
+    startScreen.classList.add(
+        "hidden"
+    );
 
-    game.classList.remove("hidden");
+
+    endScreen.classList.add(
+        "hidden"
+    );
+
+
+    game.classList.remove(
+        "hidden"
+    );
+
 
     playMusic();
 
+
     showQuestion();
+
 }
 
 
-/* FINISH GAME */
+
+/* =========================================
+   FINISH GAME
+   ========================================= */
 
 function finishGame() {
 
-    game.classList.add("hidden");
 
-    endScreen.classList.remove("hidden");
+    game.classList.add(
+        "hidden"
+    );
+
+
+    endScreen.classList.remove(
+        "hidden"
+    );
+
 
     finalScore.textContent =
         "You scored " +
         score +
         " out of 10!";
 
+
     speak(
         "Great job! You scored " +
         score +
         " out of 10."
     );
+
 }
 
 
-/* START BUTTON */
+
+/* =========================================
+   START BUTTON
+   ========================================= */
 
 startBtn.addEventListener(
     "click",
@@ -320,7 +670,10 @@ startBtn.addEventListener(
 );
 
 
-/* PLAY AGAIN */
+
+/* =========================================
+   PLAY AGAIN
+   ========================================= */
 
 againBtn.addEventListener(
     "click",
@@ -328,56 +681,75 @@ againBtn.addEventListener(
 );
 
 
-/* HEAR BUTTON */
+
+/* =========================================
+   HEAR BUTTON
+   ========================================= */
 
 hearBtn.addEventListener(
     "click",
-    () => {
+    function() {
 
-        const q = questions[current];
+        speakInstruction();
 
-        speak(
-            "Look at the picture. " +
-            "Tap on the digraph cha or sha " +
-            "to complete the word."
-        );
     }
 );
 
 
-/* TOUCH + MOUSE SUPPORT
-   Works on laptop, Android and iOS. */
 
-answerButtons.forEach(button => {
+/* =========================================
+   TOUCH + MOUSE SUPPORT
+   ========================================= */
 
-    button.addEventListener(
-        "pointerup",
-        (event) => {
-
-            event.preventDefault();
-
-            checkAnswer(button);
-        }
-    );
-
-});
+answerButtons.forEach(
+    function(button) {
 
 
-/* 5-SECOND INNOVINE SPLASH */
+        button.addEventListener(
+            "pointerup",
+            function(event) {
+
+
+                event.preventDefault();
+
+
+                checkAnswer(
+                    button
+                );
+
+            }
+        );
+
+    }
+);
+
+
+
+/* =========================================
+   5-SECOND INNOVINE SPLASH
+   ========================================= */
 
 window.addEventListener(
     "load",
-    () => {
+    function() {
 
-        setTimeout(() => {
 
-            splash.style.display = "none";
+        setTimeout(
+            function() {
 
-            startScreen.classList.remove(
-                "hidden"
-            );
 
-        }, 5000);
+                splash.style.display =
+                    "none";
+
+
+                startScreen.classList.remove(
+                    "hidden"
+                );
+
+
+            },
+            5000
+        );
 
     }
 );
