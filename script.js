@@ -1,116 +1,104 @@
-/* =========================================
-   SH AND CH DIGRAPH GAME
-   ========================================= */
+/* =====================================
+   SH / CH DIGRAPH GAME
+   ===================================== */
 
 
-/* =========================================
+/* =====================================
    QUESTIONS
-   ========================================= */
+   ===================================== */
 
 const questions = [
 
     {
         image: "chick.png",
-        word: "_ick",
+        incomplete: "__ick",
         answer: "ch",
-        spoken: "chick"
+        word: "chick"
     },
 
     {
         image: "shoe.png",
-        word: "_oe",
+        incomplete: "__oe",
         answer: "sh",
-        spoken: "shoe"
+        word: "shoe"
     },
 
     {
         image: "sheep.png",
-        word: "_eep",
+        incomplete: "__eep",
         answer: "sh",
-        spoken: "sheep"
+        word: "sheep"
     },
 
     {
         image: "chair.png",
-        word: "_air",
+        incomplete: "__air",
         answer: "ch",
-        spoken: "chair"
+        word: "chair"
     },
 
     {
         image: "shirt.png",
-        word: "_irt",
+        incomplete: "__irt",
         answer: "sh",
-        spoken: "shirt"
+        word: "shirt"
     },
 
     {
         image: "chalk.png",
-        word: "_alk",
+        incomplete: "__alk",
         answer: "ch",
-        spoken: "chalk"
+        word: "chalk"
     },
 
     {
         image: "chain.png",
-        word: "_ain",
+        incomplete: "__ain",
         answer: "ch",
-        spoken: "chain"
+        word: "chain"
     },
 
     {
         image: "ship.png",
-        word: "_ip",
+        incomplete: "__ip",
         answer: "sh",
-        spoken: "ship"
+        word: "ship"
     },
 
     {
         image: "shop.png",
-        word: "_op",
+        incomplete: "__op",
         answer: "sh",
-        spoken: "shop"
+        word: "shop"
     },
 
     {
         image: "shark.png",
-        word: "_ark",
+        incomplete: "__ark",
         answer: "sh",
-        spoken: "shark"
+        word: "shark"
     }
 
 ];
 
 
-let current = 0;
+let currentQuestion = 0;
 let score = 0;
 let locked = false;
 
 
-/* =========================================
-   ELEMENTS
-   ========================================= */
-
-const splash =
-    document.getElementById("splash");
-
-const startScreen =
-    document.getElementById("startScreen");
+/* =====================================
+   GET ELEMENTS
+   ===================================== */
 
 const game =
     document.getElementById("game");
 
+const startScreen =
+    document.getElementById("startScreen");
+
 const endScreen =
     document.getElementById("endScreen");
-
-const startBtn =
-    document.getElementById("startBtn");
-
-const againBtn =
-    document.getElementById("againBtn");
-
-const hearBtn =
-    document.getElementById("hearBtn");
 
 const itemImage =
     document.getElementById("itemImage");
@@ -145,42 +133,85 @@ const correctSound =
 const wrongSound =
     document.getElementById("wrongSound");
 
+const hearBtn =
+    document.getElementById("hearBtn");
+
 const answerButtons =
     document.querySelectorAll(".answerBtn");
 
 
-/* =========================================
-   BACKGROUND MUSIC
-   ========================================= */
+/* =====================================
+   VOICE FUNCTION
+   ===================================== */
 
-function playMusic() {
+function speak(text) {
 
-    music.volume = 0.15;
+    if (!("speechSynthesis" in window)) {
+        return;
+    }
 
-    music.play().catch(() => {});
+    window.speechSynthesis.cancel();
 
+    const voice =
+        new SpeechSynthesisUtterance(text);
+
+    voice.lang = "en-US";
+    voice.rate = 0.8;
+    voice.pitch = 1.05;
+    voice.volume = 1;
+
+    window.speechSynthesis.speak(voice);
 }
 
 
-/* =========================================
+/* =====================================
+   START GAME
+   ===================================== */
+
+window.startGame = function () {
+
+    currentQuestion = 0;
+    score = 0;
+    locked = false;
+
+    startScreen.classList.add("hidden");
+
+    endScreen.classList.add("hidden");
+
+    game.classList.remove("hidden");
+
+
+    /* Background music */
+
+    music.volume = 0.15;
+
+    music.play().catch(function () {});
+
+
+    showQuestion();
+
+};
+
+
+/* =====================================
    SHOW QUESTION
-   ========================================= */
+   ===================================== */
 
 function showQuestion() {
 
     locked = false;
 
-    const q =
-        questions[current];
+    const question =
+        questions[currentQuestion];
 
 
-    /* Picture */
+    /* Image */
 
     itemImage.src =
-        "assets/" + q.image;
+        "assets/" + question.image;
 
     itemImage.alt =
-        q.spoken;
+        question.word;
 
 
     /* Instruction */
@@ -189,20 +220,16 @@ function showQuestion() {
         "Tap on the correct digraph to complete the word.";
 
 
-    /* Show incomplete word */
+    /* Incomplete word */
 
-    const remainingWord =
-        q.word.substring(1);
-
-    wordBox.innerHTML =
-        '<span class="blank">__</span>' +
-        remainingWord;
+    wordBox.textContent =
+        question.incomplete;
 
 
     /* Progress */
 
     progress.textContent =
-        (current + 1) +
+        (currentQuestion + 1) +
         " / " +
         questions.length;
 
@@ -213,71 +240,107 @@ function showQuestion() {
         "⭐ " + score;
 
 
-    /* Reset answer buttons */
+    /* Reset buttons */
 
     answerButtons.forEach(
         function(button) {
+
+            button.disabled = false;
 
             button.classList.remove(
                 "correct",
                 "wrong"
             );
 
-            button.disabled = false;
-
         }
     );
 
 
-    /* Voice instruction */
+    /* Speak instruction */
 
     setTimeout(
-        function() {
+        function () {
 
-            speakInstruction();
+            speak(
+                "Tap on the correct digraph to complete the word."
+            );
 
         },
-        150
+        200
     );
 
 }
 
 
-/* =========================================
-   CHECK ANSWER
-   ========================================= */
+/* =====================================
+   ANSWER BUTTONS
+   TOUCH + MOUSE
+   ===================================== */
 
-function checkAnswer(button) {
+answerButtons.forEach(
+    function(button) {
+
+        button.addEventListener(
+            "pointerup",
+            function(event) {
+
+                event.preventDefault();
+
+                checkAnswer(
+                    button.dataset.answer,
+                    button
+                );
+
+            }
+        );
+
+    }
+);
+
+
+/* =====================================
+   CHECK ANSWER
+   ===================================== */
+
+function checkAnswer(
+    selectedAnswer,
+    button
+) {
 
     if (locked) {
         return;
     }
 
 
-    const selected =
-        button.dataset.answer;
-
-    const q =
-        questions[current];
+    const question =
+        questions[currentQuestion];
 
 
-    /* =====================================
-       CORRECT ANSWER
-       ===================================== */
+    /* ===============================
+       CORRECT
+       =============================== */
 
-    if (selected === q.answer) {
+    if (
+        selectedAnswer ===
+        question.answer
+    ) {
 
         locked = true;
 
+        score++;
 
-        /* Highlight correct button */
+        scoreBox.textContent =
+            "⭐ " + score;
+
+
+        /* Highlight button */
 
         button.classList.add(
             "correct"
         );
 
 
-        /* Disable both buttons */
+        /* Disable buttons */
 
         answerButtons.forEach(
             function(btn) {
@@ -288,24 +351,23 @@ function checkAnswer(button) {
         );
 
 
-        /* Increase score */
+        /* COMPLETE WORD */
 
-        score++;
+        const completedWord =
+            document.createElement("span");
 
-        scoreBox.textContent =
-            "⭐ " + score;
+        completedWord.className =
+            "completedWord";
+
+        completedWord.textContent =
+            question.word;
 
 
-        /* COMPLETE THE WORD */
+        wordBox.innerHTML = "";
 
-        const remainingWord =
-            q.word.substring(1);
-
-        wordBox.innerHTML =
-            '<span class="filled">' +
-            q.answer +
-            '</span>' +
-            remainingWord;
+        wordBox.appendChild(
+            completedWord
+        );
 
 
         /* Correct feedback */
@@ -314,21 +376,18 @@ function checkAnswer(button) {
 
 
         /*
-         * IMPORTANT:
-         * Speak ONLY the completed word.
+         * SAY THE COMPLETED WORD
          *
          * Example:
-         * chick
-         * sheep
-         * chair
-         * shoe
+         * "chair"
+         * "sheep"
          */
 
         setTimeout(
             function() {
 
-                speakWord(
-                    q.spoken
+                speak(
+                    question.word
                 );
 
             },
@@ -336,16 +395,16 @@ function checkAnswer(button) {
         );
 
 
-        /* Move to next question */
+        /* Next question */
 
         setTimeout(
             function() {
 
-                current++;
+                currentQuestion++;
 
 
                 if (
-                    current >=
+                    currentQuestion >=
                     questions.length
                 ) {
 
@@ -359,21 +418,22 @@ function checkAnswer(button) {
                 }
 
             },
-            1900
+            2000
         );
 
     }
 
 
-    /* =====================================
-       WRONG ANSWER
-       ===================================== */
+    /* ===============================
+       WRONG
+       =============================== */
 
     else {
 
         /*
-         * The game does NOT move ahead.
-         * The child can try again.
+         * IMPORTANT:
+         * Do not change question.
+         * Do not move forward.
          */
 
         button.classList.add(
@@ -383,8 +443,6 @@ function checkAnswer(button) {
 
         showWrong();
 
-
-        /* Voice */
 
         setTimeout(
             function() {
@@ -397,8 +455,6 @@ function checkAnswer(button) {
             100
         );
 
-
-        /* Remove wrong highlight */
 
         setTimeout(
             function() {
@@ -416,9 +472,9 @@ function checkAnswer(button) {
 }
 
 
-/* =========================================
+/* =====================================
    CORRECT FEEDBACK
-   ========================================= */
+   ===================================== */
 
 function showCorrect() {
 
@@ -433,15 +489,14 @@ function showCorrect() {
     );
 
 
-    correctSound.currentTime =
-        0;
+    correctSound.currentTime = 0;
 
     correctSound.play().catch(
-        () => {}
+        function () {}
     );
 
 
-    makeConfetti();
+    createConfetti();
 
 
     setTimeout(
@@ -458,9 +513,9 @@ function showCorrect() {
 }
 
 
-/* =========================================
+/* =====================================
    WRONG FEEDBACK
-   ========================================= */
+   ===================================== */
 
 function showWrong() {
 
@@ -475,11 +530,10 @@ function showWrong() {
     );
 
 
-    wrongSound.currentTime =
-        0;
+    wrongSound.currentTime = 0;
 
     wrongSound.play().catch(
-        () => {}
+        function () {}
     );
 
 
@@ -497,39 +551,33 @@ function showWrong() {
 }
 
 
-/* =========================================
+/* =====================================
    CONFETTI
-   ========================================= */
+   ===================================== */
 
-function makeConfetti() {
+function createConfetti() {
 
-    confetti.innerHTML =
-        "";
+    confetti.innerHTML = "";
 
 
     const colours = [
-
         "#ff6b6b",
         "#ffd43b",
         "#69db7c",
         "#4dabf7",
         "#cc5de8",
         "#ff922b"
-
     ];
 
 
     for (
         let i = 0;
-        i < 65;
+        i < 60;
         i++
     ) {
 
         const piece =
-            document.createElement(
-                "div"
-            );
-
+            document.createElement("div");
 
         piece.className =
             "piece";
@@ -549,7 +597,7 @@ function makeConfetti() {
 
         piece.style.animationDelay =
             Math.random() *
-            0.25 +
+            0.3 +
             "s";
 
 
@@ -563,62 +611,42 @@ function makeConfetti() {
     setTimeout(
         function() {
 
-            confetti.innerHTML =
-                "";
+            confetti.innerHTML = "";
 
         },
-        1400
+        1500
     );
 
 }
 
 
-/* =========================================
-   START GAME
-   ========================================= */
+/* =====================================
+   HEAR BUTTON
+   ===================================== */
 
-function startGame() {
+hearBtn.addEventListener(
+    "pointerup",
+    function(event) {
 
-    current = 0;
+        event.preventDefault();
 
-    score = 0;
+        speak(
+            "Tap on the correct digraph to complete the word."
+        );
 
-    locked = false;
-
-
-    startScreen.classList.add(
-        "hidden"
-    );
-
-
-    endScreen.classList.add(
-        "hidden"
-    );
+    }
+);
 
 
-    game.classList.remove(
-        "hidden"
-    );
-
-
-    playMusic();
-
-
-    showQuestion();
-
-}
-
-
-/* =========================================
+/* =====================================
    FINISH GAME
-   ========================================= */
+   ===================================== */
 
 function finishGame() {
 
     game.classList.add(
         "hidden"
     );
-
 
     endScreen.classList.remove(
         "hidden"
@@ -631,93 +659,17 @@ function finishGame() {
         " out of 10!";
 
 
-    speak(
-        "Great job! You scored " +
-        score +
-        " out of 10."
+    setTimeout(
+        function() {
+
+            speak(
+                "Great job! You scored " +
+                score +
+                " out of 10."
+            );
+
+        },
+        300
     );
 
 }
-
-
-/* =========================================
-   START BUTTON
-   ========================================= */
-
-startBtn.addEventListener(
-    "click",
-    startGame
-);
-
-
-/* =========================================
-   PLAY AGAIN
-   ========================================= */
-
-againBtn.addEventListener(
-    "click",
-    startGame
-);
-
-
-/* =========================================
-   HEAR BUTTON
-   ========================================= */
-
-hearBtn.addEventListener(
-    "click",
-    function() {
-
-        speakInstruction();
-
-    }
-);
-
-
-/* =========================================
-   TOUCH + MOUSE
-   Android + iOS + Laptop
-   ========================================= */
-
-answerButtons.forEach(
-    function(button) {
-
-        button.addEventListener(
-            "pointerup",
-            function(event) {
-
-                event.preventDefault();
-
-                checkAnswer(button);
-
-            }
-        );
-
-    }
-);
-
-
-/* =========================================
-   5-SECOND INNOVINE SPLASH
-   ========================================= */
-
-window.addEventListener(
-    "load",
-    function() {
-
-        setTimeout(
-            function() {
-
-                splash.style.display =
-                    "none";
-
-                startScreen.classList.remove(
-                    "hidden"
-                );
-
-            },
-            5000
-        );
-
-    }
-);
